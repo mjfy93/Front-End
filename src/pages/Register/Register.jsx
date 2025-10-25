@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import './Register.css';
 
 const Register = () => {
@@ -13,6 +14,7 @@ const Register = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleChange = (e) => {
         setFormData({
@@ -26,7 +28,7 @@ const Register = () => {
         setError('');
         setLoading(true);
 
-        if(formData.password !== formData.Data.confirmPassword) {
+        if (formData.password !== formData.confirmPassword) {
             setError('Las contraseñas no coinciden');
             setLoading(false);
             return;
@@ -39,7 +41,7 @@ const Register = () => {
         }
 
         try {
-            const response = await fetch('https://localhost:5000/api/auth/register', {
+            const response = await fetch('http://localhost:5000/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -57,6 +59,13 @@ const Register = () => {
             if (response.ok) {
                 localStorage.setItem('token', data.access_token);
                 localStorage.setItem('user_id', data.user_id);
+                localStorage.setItem('username', formData.username);
+                
+                login({
+                    token: data.access_token,
+                    user_id: data.user_id,
+                    username: formData.username
+                });
                 navigate('/');
             } else {
                 setError(data.error || 'Error en el registro');
@@ -73,9 +82,9 @@ const Register = () => {
             <div className="register-card">
                 <h2>Crear Cuenta</h2>
                 <p className="register-subtitle">Únete a nuestra biblioteca virtual</p>
-
+                
                 {error && <div className="alert alert-danger">{error}</div>}
-
+                
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="username">Nombre de Usuario *</label>
@@ -138,8 +147,8 @@ const Register = () => {
                         />
                     </div>
 
-                    <button
-                        type="submit"
+                    <button 
+                        type="submit" 
                         className="btn-register"
                         disabled={loading}
                     >
