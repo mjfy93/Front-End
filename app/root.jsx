@@ -4,15 +4,15 @@ import { ThemeProvider } from './context/ThemeContext.jsx'
 
 export default function App() {
 
-  const location = useLocation();
-  const isHomePage = location.pathname === '/';
+
+  
 
 
 
   return (
     <ThemeProvider>
       <HtmlShell>
-        <main className= {isHomePage ? '' : 'container mt-4'}>
+        <main className='container mb-5'>
           <Outlet />
         </main>
       </HtmlShell>

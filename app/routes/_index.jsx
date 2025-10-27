@@ -22,30 +22,57 @@ export default function Home() {
 
   return (
 
-    <div className="home-container">
-      <div className="container">
-        <h2>Genero</h2>
-        <div className="bookstand">
-          <div className="overflow-auto h-25">
-            <div className="d-flex flex-nowrap gap-4 pb-3 ">
-              {/* {data.map((item, index) => ( */}
-              <div className="flex-shrink-1" >
-                <img src={`https://picsum.photos/75/100?random=1`} className="img-fluid img-thumbnail" alt="Book" />
-                <h5>Título libro</h5>
-                <p className="text-wrap">Autor Libro</p>
-                <Link to={'/detalle'} className="link-underline link-underline-opacity-0 ">
-                  <button type="button" className="btn btn-secondary">Más información</button>
-                </Link>
-              </div>
-              {/* ))} */}
-              <Link to={'/genero'} className="link-underline link-underline-opacity-0 object-fit-sacle">
-                <button type="button" className="btn btn-outline-secondary d-flex align-self-center flex-nowrap">Más libros de #este género </button>
-              </Link>
+    // Condicional para comprobar si ya se inició sesión. Si no:
+    <>
+      <div className="homeContainer text-start my-5 px-4">
 
-            </div>
+
+        <div className="row">
+          <div className="welcomeContainer col-8" >
+            <h1>BooketList - Encuentra tu próximo libro </h1>
+            <p>¡Bienvenidos y Bienvenidas!</p>
+            <p>BooketList es el lugar de encuentro para todos los que alguna vez se dijeron a sí mismos: "No sé qué leer".</p>
+            <p>Acá, encontrarás un compendio de todos los libros que toda persona amante de la literatura debe leer antes de morir. Tenemos libros para todos los gustos y de todos los géneros, guarda tus favoritos, agrega reseñas y calificaciones y date el per</p>
+          </div>
+
+          <div className="loginContainer col-4">
+            <form>
+              <h2>Iniciar sesión</h2>
+              <div className="mb-3">
+                <label for="correoElectrónico" className="form-label">Correo electrónico</label>
+                <input type="email" className="form-control" id="correoElectrónico" aria-describedby="emailHelp" />
+
+              </div>
+              <div className="mb-3">
+                <label for="contraseña" className="form-label">Contraseña</label>
+                <input type="password" className="form-control" id="contraseña" />
+              </div>
+
+              <button type="submit" className="btn btn-light">Iniciar sesión</button>
+              <p>¿No tienes una cuenta? <Link to={'/#'}>Crea una cuenta.</Link></p>
+            </form>
+          </div>
+
+        </div>
+      </div>
+//Si ya se inició sesión:
+
+
+      <div className="homeContainer text-start my-5 px-4">
+
+        <div className="card" >
+          <div className="card-body">
+            <h5 className="card-title">BooketList</h5>
+            <h6 className="card-subtitle mb-2 text-body-secondary">Bienvenido/a #nombreDeUsuario</h6>
+            <p className="card-text">¡Comienza a explorar! </p>
+            <a href="#MiBiblioteca" className="card-link">Mi Biblioteca</a>
+            <a href="/libros" className="card-link">Encuentra tu siguiente libro favorito</a>
           </div>
         </div>
       </div>
-    </div>
+
+    </>
+
+
   )
 }

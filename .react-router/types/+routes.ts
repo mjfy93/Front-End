@@ -14,6 +14,12 @@ type Pages = {
   "/": {
     params: {};
   };
+  "/libros": {
+    params: {};
+  };
+  "/autores": {
+    params: {};
+  };
   "/genero": {
     params: {};
   };
@@ -31,11 +37,19 @@ type Pages = {
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/genero" | "/detalle" | "/users" | "/contact";
+    page: "/" | "/libros" | "/autores" | "/genero" | "/detalle" | "/users" | "/contact";
   };
   "routes/_index.jsx": {
     id: "routes/_index";
     page: "/";
+  };
+  "routes/_libros.jsx": {
+    id: "routes/_libros";
+    page: "/libros";
+  };
+  "routes/_autores.jsx": {
+    id: "routes/_autores";
+    page: "/autores";
   };
   "routes/_genero.jsx": {
     id: "routes/_genero";
@@ -58,6 +72,8 @@ type RouteFiles = {
 type RouteModules = {
   "root": typeof import("./app/root.jsx");
   "routes/_index": typeof import("./app/routes/_index.jsx");
+  "routes/_libros": typeof import("./app/routes/_libros.jsx");
+  "routes/_autores": typeof import("./app/routes/_autores.jsx");
   "routes/_genero": typeof import("./app/routes/_genero.jsx");
   "routes/_detalle": typeof import("./app/routes/_detalle.jsx");
   "routes/users": typeof import("./app/routes/users.jsx");
