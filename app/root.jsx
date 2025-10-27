@@ -2,6 +2,7 @@ import { Outlet } from 'react-router'
 import HtmlShell from './components/HtmlShell.jsx'
 import { ThemeProvider } from './context/ThemeContext.jsx'
 import { AuthProvider } from './context/Authcontext.jsx'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default function App() {
   return (
