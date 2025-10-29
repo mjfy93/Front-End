@@ -96,12 +96,9 @@ type Pages = {
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-<<<<<<< HEAD
-    page: "/" | "/genre" | "/users" | "/contact" | "/profile" | "/login" | "/register" | "/admin/login" | "/admin" | "/admin/users" | "/admin/books" | "/admin/authors" | "/admin/books/new" | "/admin/authors/new" | "/admin/books/edit/:id" | "/admin/authors/:id" | "/admin/users/:id" | "/admin/authors/:id/books";
-=======
-    page: "/" | "/libros" | "/autores" | "/generosTodos" | "/genero" | "/detalle" | "/resena" | "/users" | "/biblioteca" | "/contact";
->>>>>>> origin/main
-  };
+    page: "/" | "/libros" | "/autores" | "/generosTodos" | "/genero" | "/detalle" | "/resena" | "/users" | "/biblioteca" | "/contact" | "/login" | "/register" | "/admin/login" | "/admin" | "/admin/users" | "/admin/books" | "/admin/authors" | "/admin/books/new" | "/admin/authors/new" | "/admin/books/edit/:id" | "/admin/authors/:id" | "/admin/users/:id" | "/admin/authors/:id/books";
+
+
   "routes/_index.jsx": {
     id: "routes/_index";
     page: "/";
@@ -226,4 +223,6 @@ type RouteModules = {
   "routes/admin-author-detail": typeof import("./app/routes/admin-author-detail.jsx");
   "routes/admin-user-detail": typeof import("./app/routes/admin-user-detail.jsx");
   "routes/admin-author-books": typeof import("./app/routes/admin-author-books.jsx");
+  "routes/login": typeof import("./app/routes/login.jsx");
+  "routes/register": typeof import("./app/routes/register.jsx");
 };
