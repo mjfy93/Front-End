@@ -14,13 +14,28 @@ type Pages = {
   "/": {
     params: {};
   };
+  "/libros": {
+    params: {};
+  };
+  "/autores": {
+    params: {};
+  };
+  "/generosTodos": {
+    params: {};
+  };
   "/genero": {
     params: {};
   };
   "/detalle": {
     params: {};
   };
+  "/resena": {
+    params: {};
+  };
   "/users": {
+    params: {};
+  };
+  "/biblioteca": {
     params: {};
   };
   "/contact": {
@@ -37,11 +52,23 @@ type Pages = {
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/genero" | "/detalle" | "/users" | "/contact" | "/login" | "/register";
+    page: "/" | "/libros" | "/autores" | "/generosTodos" | "/genero" | "/detalle" | "/resena" | "/users" | "/biblioteca" | "/contact" | "/login" | "/register";
   };
   "routes/_index.jsx": {
     id: "routes/_index";
     page: "/";
+  };
+  "routes/_libros.jsx": {
+    id: "routes/_libros";
+    page: "/libros";
+  };
+  "routes/_autores.jsx": {
+    id: "routes/_autores";
+    page: "/autores";
+  };
+  "routes/_generosTodos.jsx": {
+    id: "routes/_generosTodos";
+    page: "/generosTodos";
   };
   "routes/_genero.jsx": {
     id: "routes/_genero";
@@ -51,9 +78,17 @@ type RouteFiles = {
     id: "routes/_detalle";
     page: "/detalle";
   };
+  "routes/_resena.jsx": {
+    id: "routes/_resena";
+    page: "/resena";
+  };
   "routes/users.jsx": {
     id: "routes/users";
     page: "/users";
+  };
+  "routes/_bibliotecaUsuario.jsx": {
+    id: "routes/_bibliotecaUsuario";
+    page: "/biblioteca";
   };
   "routes/contact.jsx": {
     id: "routes/contact";
@@ -72,9 +107,14 @@ type RouteFiles = {
 type RouteModules = {
   "root": typeof import("./app/root.jsx");
   "routes/_index": typeof import("./app/routes/_index.jsx");
+  "routes/_libros": typeof import("./app/routes/_libros.jsx");
+  "routes/_autores": typeof import("./app/routes/_autores.jsx");
+  "routes/_generosTodos": typeof import("./app/routes/_generosTodos.jsx");
   "routes/_genero": typeof import("./app/routes/_genero.jsx");
   "routes/_detalle": typeof import("./app/routes/_detalle.jsx");
+  "routes/_resena": typeof import("./app/routes/_resena.jsx");
   "routes/users": typeof import("./app/routes/users.jsx");
+  "routes/_bibliotecaUsuario": typeof import("./app/routes/_bibliotecaUsuario.jsx");
   "routes/contact": typeof import("./app/routes/contact.jsx");
   "routes/login": typeof import("./app/routes/login.jsx");
   "routes/register": typeof import("./app/routes/register.jsx");

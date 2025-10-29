@@ -5,20 +5,18 @@ import { AuthProvider } from './context/AuthContext.jsx'
 
 export default function App() {
 
-  const location = useLocation();
-  const isHomePage = location.pathname === '/';
+
+  
 
 
 
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <HtmlShell>
-          <main className={isHomePage ? '' : 'container mt-4'}>
-            <Outlet />
-          </main>
-        </HtmlShell>
-      </AuthProvider>
+      <HtmlShell>
+        <main className='container mb-5'>
+          <Outlet />
+        </main>
+      </HtmlShell>
     </ThemeProvider>
   )
 }

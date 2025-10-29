@@ -1,8 +1,8 @@
-export default function Genero(){
-    return(
+export default function Libros() {
+    return (
         <div className="containerLibros">
-            <h1>Genero Clásico</h1>
-            <h3>Acá podrás explorar todos los libros del género clásico</h3>
+            <h1>Biblioteca</h1>
+            <h3>Acá podrás explorar todos los libros en nuestra colección</h3>
             <div className="container text-center">
                 <div className="row row-cols-1 row-cols-sm-2 row-cols-md-4">
                     <div className="col">
