@@ -1,9 +1,14 @@
 export default [
     { path: '/', file: 'routes/_index.jsx' },
-    { path: '/genre', file: 'routes/_genre.jsx' },
+    { path: '/libros', file: 'routes/_libros.jsx' },
+    { path: '/autores', file: 'routes/_autores.jsx' },
+    { path: '/generosTodos', file: 'routes/_generosTodos.jsx' },
+    { path: '/genero', file: 'routes/_genero.jsx' },
+    { path: '/detalle', file: 'routes/_detalle.jsx' },
+    { path: '/resena', file: 'routes/_resena.jsx' },
     { path: '/users', file: 'routes/users.jsx' },
-    { path: '/contact', file: 'routes/contact.jsx' },
-    { path: '/profile', file: 'routes/user-profile.jsx' },
+    { path: '/biblioteca', file: 'routes/_bibliotecaUsuario.jsx' },
+    {path: '/contact', file: 'routes/contact.jsx'},
     { path: '/login', file: 'routes/login.jsx' },          // Nueva ruta
     { path: '/register', file: 'routes/register.jsx' },    // Nueva ruta
     { path: '/admin/login', file: 'routes/admin-login.jsx' },
@@ -12,12 +17,13 @@ export default [
     { path: '/admin/books', file: 'routes/admin-books.jsx' },
     { path: '/admin/authors', file: 'routes/admin-authors.jsx' },
     { path: '/admin/books/new', file: 'routes/admin-new-book.jsx' },
-{ path: '/admin/authors/new', file: 'routes/admin-new-author.jsx' },
+    { path: '/admin/authors/new', file: 'routes/admin-new-author.jsx' },
     
     // Rutas dinámicas
-    { path: '/admin/books/edit/:id', file: 'routes/admin-edit-book.jsx' },
-    { path: '/admin/authors/:id', file: 'routes/admin-author-detail.jsx' },
-    { path: '/admin/users/:id', file: 'routes/admin-user-detail.jsx' },
-    { path: '/admin/authors/:id/books', file: 'routes/admin-author-books.jsx' }
+    //{ path: '/admin/books/edit/:id', file: 'routes/admin-edit-book.jsx' },
+    //{ path: '/admin/authors/:id', file: 'routes/admin-author-detail.jsx' },
+    //{ path: '/admin/users/:id', file: 'routes/admin-user-detail.jsx' },
+    //{ path: '/admin/authors/:id/books', file: 'routes/admin-author-books.jsx' },
 
+   
 ]

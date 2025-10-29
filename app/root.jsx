@@ -1,12 +1,18 @@
-import { Outlet } from 'react-router'
+import { Outlet, useLocation } from 'react-router'
 import HtmlShell from './components/HtmlShell.jsx'
 import { ThemeProvider } from './context/ThemeContext.jsx'
 
 export default function App() {
+
+
+  
+
+
+
   return (
     <ThemeProvider>
       <HtmlShell>
-        <main className='container mt-4'>
+        <main className='container mb-5'>
           <Outlet />
         </main>
       </HtmlShell>

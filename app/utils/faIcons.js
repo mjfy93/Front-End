@@ -2,5 +2,6 @@ export {
   faLightbulb,
   faHome,
   faPaintBrush, 
-  faBook
+  faBook, 
+  faStar
 } from '@fortawesome/free-solid-svg-icons'

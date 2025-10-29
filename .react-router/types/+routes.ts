@@ -14,10 +14,28 @@ type Pages = {
   "/": {
     params: {};
   };
-  "/genre": {
+  "/libros": {
+    params: {};
+  };
+  "/autores": {
+    params: {};
+  };
+  "/generosTodos": {
+    params: {};
+  };
+  "/genero": {
+    params: {};
+  };
+  "/detalle": {
+    params: {};
+  };
+  "/resena": {
     params: {};
   };
   "/users": {
+    params: {};
+  };
+  "/biblioteca": {
     params: {};
   };
   "/contact": {
@@ -78,19 +96,47 @@ type Pages = {
 type RouteFiles = {
   "root.jsx": {
     id: "root";
+<<<<<<< HEAD
     page: "/" | "/genre" | "/users" | "/contact" | "/profile" | "/login" | "/register" | "/admin/login" | "/admin" | "/admin/users" | "/admin/books" | "/admin/authors" | "/admin/books/new" | "/admin/authors/new" | "/admin/books/edit/:id" | "/admin/authors/:id" | "/admin/users/:id" | "/admin/authors/:id/books";
+=======
+    page: "/" | "/libros" | "/autores" | "/generosTodos" | "/genero" | "/detalle" | "/resena" | "/users" | "/biblioteca" | "/contact";
+>>>>>>> origin/main
   };
   "routes/_index.jsx": {
     id: "routes/_index";
     page: "/";
   };
-  "routes/_genre.jsx": {
-    id: "routes/_genre";
-    page: "/genre";
+  "routes/_libros.jsx": {
+    id: "routes/_libros";
+    page: "/libros";
+  };
+  "routes/_autores.jsx": {
+    id: "routes/_autores";
+    page: "/autores";
+  };
+  "routes/_generosTodos.jsx": {
+    id: "routes/_generosTodos";
+    page: "/generosTodos";
+  };
+  "routes/_genero.jsx": {
+    id: "routes/_genero";
+    page: "/genero";
+  };
+  "routes/_detalle.jsx": {
+    id: "routes/_detalle";
+    page: "/detalle";
+  };
+  "routes/_resena.jsx": {
+    id: "routes/_resena";
+    page: "/resena";
   };
   "routes/users.jsx": {
     id: "routes/users";
     page: "/users";
+  };
+  "routes/_bibliotecaUsuario.jsx": {
+    id: "routes/_bibliotecaUsuario";
+    page: "/biblioteca";
   };
   "routes/contact.jsx": {
     id: "routes/contact";
@@ -157,8 +203,14 @@ type RouteFiles = {
 type RouteModules = {
   "root": typeof import("./app/root.jsx");
   "routes/_index": typeof import("./app/routes/_index.jsx");
-  "routes/_genre": typeof import("./app/routes/_genre.jsx");
+  "routes/_libros": typeof import("./app/routes/_libros.jsx");
+  "routes/_autores": typeof import("./app/routes/_autores.jsx");
+  "routes/_generosTodos": typeof import("./app/routes/_generosTodos.jsx");
+  "routes/_genero": typeof import("./app/routes/_genero.jsx");
+  "routes/_detalle": typeof import("./app/routes/_detalle.jsx");
+  "routes/_resena": typeof import("./app/routes/_resena.jsx");
   "routes/users": typeof import("./app/routes/users.jsx");
+  "routes/_bibliotecaUsuario": typeof import("./app/routes/_bibliotecaUsuario.jsx");
   "routes/contact": typeof import("./app/routes/contact.jsx");
   "routes/user-profile": typeof import("./app/routes/user-profile.jsx");
   "routes/login": typeof import("./app/routes/login.jsx");
