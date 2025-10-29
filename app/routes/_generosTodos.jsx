@@ -11,7 +11,7 @@ export default function Genero() {
                     <h2>Clásicos</h2>
                     <div className="bookstand">
                         <div className="overflow-auto h-25">
-                            <div className="d-flex flex-nowrap gap-4 pb-3 ">
+                            <div className="d-flex flex-nowrap gap-4 pb-3">
                                 <div className="flex-shrink-1" >
                                     <img src="https://placehold.co/150" className="img-fluid img-thumbnail" alt="Book" />
                                     <h5>Titulo</h5>

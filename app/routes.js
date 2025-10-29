@@ -10,7 +10,6 @@ export default [
     { path: '/login', file: 'routes/login.jsx' },
     { path: '/register', file: 'routes/register.jsx' },
     { path: '/resena', file: 'routes/_resena.jsx' },
-    { path: '/users', file: 'routes/users.jsx' },
     { path: '/biblioteca', file: 'routes/_bibliotecaUsuario.jsx' },
     {path: '/contact', file: 'routes/contact.jsx'}
 ]

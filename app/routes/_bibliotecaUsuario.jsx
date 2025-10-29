@@ -1,3 +1,5 @@
+import { Link } from 'react-router'
+
 export default function BibliotecaUsuario() {
     return (
         <div className="bibliotecaUsuarioContainer">
@@ -10,51 +12,35 @@ export default function BibliotecaUsuario() {
                     <button className="nav-link" id="autores-tab" data-bs-toggle="tab" data-bs-target="#autores-pane" type="button" role="tab" aria-controls="autores-pane" aria-selected="false">Autores</button>
                 </li>
                 <li className="nav-item" role="presentation">
-                    <button className="nav-link" id="clasicos-tab" data-bs-toggle="tab" data-bs-target="#clasicos-pane" type="button" role="tab" aria-controls="clasicos-pane" aria-selected="false">Clásicos</button>
+                    <button className="nav-link" id="leyendo-tab" data-bs-toggle="tab" data-bs-target="#leyendo-pane" type="button" role="tab" aria-controls="leyendo-pane" aria-selected="false">Leyendo</button>
                 </li>
                 <li className="nav-item" role="presentation">
-                    <button className="nav-link" id="cienciaFiccion-tab" data-bs-toggle="tab" data-bs-target="#cienciaFiccion-pane" type="button" role="tab" aria-controls="cienciaFiccion-pane" aria-selected="false">Ciencia Ficción</button>
+                    <button className="nav-link" id="leido-tab" data-bs-toggle="tab" data-bs-target="#leido-pane" type="button" role="tab" aria-controls="leido-pane" aria-selected="false">Leidos</button>
                 </li>
                 <li className="nav-item" role="presentation">
-                    <button className="nav-link" id="ficcion-tab" data-bs-toggle="tab" data-bs-target="#ficcion-pane" type="button" role="tab" aria-controls="ficcion-pane" aria-selected="false">Ficción</button>
+                    <button className="nav-link" id="porLeer-tab" data-bs-toggle="tab" data-bs-target="#porLeer-pane" type="button" role="tab" aria-controls="porLeer-pane" aria-selected="false">Por Leer</button>
                 </li>
-                <li className="nav-item" role="presentation">
-                    <button className="nav-link" id="historia-tab" data-bs-toggle="tab" data-bs-target="#historia-pane" type="button" role="tab" aria-controls="historia-pane" aria-selected="false">Historia</button>
-                </li>
-                <li className="nav-item" role="presentation">
-                    <button className="nav-link" id="litLatina-tab" data-bs-toggle="tab" data-bs-target="#litLatina-pane" type="button" role="tab" aria-controls="litLatina-pane" aria-selected="false">Literatura Latinoamericana</button>
-                </li>
-                <li className="nav-item" role="presentation">
-                    <button className="nav-link" id="noFiccion-tab" data-bs-toggle="tab" data-bs-target="#noFiccion-pane" type="button" role="tab" aria-controls="noFiccion-pane" aria-selected="false">No-Ficción</button>
-                </li>
+
             </ul>
 
 
             <div className="tab-content" id="myTabContent">
                 <div className="tab-pane fade show active" id="todosLibros-pane" role="tabpanel" aria-labelledby="librosTodos-tab">
-                    No tienes libros en tu biblioteca.
+                    No tienes libros en tu biblioteca. ¡Agrega un libro! <Link to='/libros'>Explora nuestra biblioteca</Link>
                 </div>
                 <div className="tab-pane fade" id="autores-pane" role="tabpanel" aria-labelledby="autores-tab">
-                    No tienes autores en tu biblioteca.
+                    No tienes autores en tu biblioteca. ¡Agrega un libro! <Link to='/libros'>Explora nuestra biblioteca</Link>
                 </div>
-                <div className="tab-pane fade" id="clasicos-pane" role="tabpanel" aria-labelledby="clasicos-tab">
-                    No tienes libros del género Clásicos en tu biblioteca.
+                <div className="tab-pane fade" id="leyendo-pane" role="tabpanel" aria-labelledby="leyendo-tab">
+                    No estás leyendo ningún libro en este momento. ¡Agrega un libro! <Link to='/libros'>Explora nuestra biblioteca</Link>
                 </div>
-                <div className="tab-pane fade" id="cienciaFiccion-pane" role="tabpanel" aria-labelledby="cienciaFiccion-tab">
-                    No tienes libros del género Ciencia Ficción en tu biblioteca.
+                <div className="tab-pane fade" id="leido-pane" role="tabpanel" aria-labelledby="leido-tab">
+                    No tienes libros leídos en tu biblioteca. ¡Agrega un libro! <Link to='/libros'>Explora nuestra biblioteca</Link>
                 </div>
-                <div className="tab-pane fade" id="ficcion-pane" role="tabpanel" aria-labelledby="ficcion-tab">
-                    No tienes libros del género Ficción en tu biblioteca.
+                <div className="tab-pane fade" id="porLeer-pane" role="tabpanel" aria-labelledby="porLeer-tab">
+                    No tienes libros por leer en tu biblioteca. ¡Agrega un libro! <Link to='/libros'>Explora nuestra biblioteca</Link>
                 </div>
-                <div className="tab-pane fade" id="historia-pane" role="tabpanel" aria-labelledby="historia-tab">
-                    No tienes libros del género Historia en tu biblioteca.
-                </div>
-                <div className="tab-pane fade" id="litLatina-pane" role="tabpanel" aria-labelledby="litLatina-tab">
-                    No tienes libros del género Literatura Latinoamericana en tu biblioteca.
-                </div>
-                <div className="tab-pane fade" id="noFiccion-pane" role="tabpanel" aria-labelledby="noFiccion-tab">
-                    No tienes libros del género No-Ficción en tu biblioteca.
-                </div>
+
             </div>
         </div>
     )

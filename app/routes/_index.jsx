@@ -1,4 +1,5 @@
 import { useLoaderData, Link, useParams } from "react-router";
+
 // import './styles/stylesHome.css'
 
 
@@ -22,8 +23,8 @@ export default function Home() {
 
   return (
 
-    // Condicional para comprobar si ya se inició sesión. Si no:
     <>
+    // Condicional para comprobar si ya se inició sesión. Si no:
       <div className="homeContainer text-start my-5 px-4">
 
 
@@ -63,16 +64,30 @@ export default function Home() {
         <div className="card" >
           <div className="card-body">
             <h5 className="card-title">BooketList</h5>
-            <h6 className="card-subtitle mb-2 text-body-secondary">Bienvenido/a #nombreDeUsuario</h6>
+            <h6 className="card-subtitle mb-2 text-body-secondary">¡Bienvenido/a #nombreDeUsuario!</h6>
             <p className="card-text">¡Comienza a explorar! </p>
-            <a href="/biblioteca" className="card-link">Mi Biblioteca</a>
-            <a href="/libros" className="card-link">Encuentra tu siguiente libro favorito</a>
+            <h6>Lecturas actuales:</h6>
+            <div className="container text-center">
+              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+                <div className="col">
+                  <div className="card" >
+                    <img src="https://placehold.co/100" className="card-img-top" alt="portada" />
+                    <div className="card-body">
+                      <h5 className="card-title">Título </h5>
+                      <p className="card-text">Autor</p>
+                      <a href="/detalle" className="btn btn-light">Más información</a>
+                    </div>
+                  </div>
+                </div>
+                <a href="/biblioteca" className="card-link">Mi Biblioteca</a>
+                <a href="/libros" className="card-link">Encuentra tu siguiente libro favorito</a>
+              </div>
+            </div>
           </div>
-        </div>
       </div>
+    </div >
+      </>
 
-    </>
 
-
-  )
+      )
 }
