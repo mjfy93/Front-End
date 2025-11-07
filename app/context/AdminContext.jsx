@@ -1,6 +1,7 @@
 // context/AdminContext.jsx
 import { createContext, useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
+import { API_BASE_URL } from "../utils/api";
 
 const AdminContext = createContext()
 
@@ -36,7 +37,7 @@ export function AdminProvider({ children }) {
     try {
       setLoading(true)
       
-      const response = await fetch('http://localhost:5000/api/admin/login', {
+      const response = await fetch(`${API_BASE_URL}/api/admin/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,7 +93,7 @@ export function AdminProvider({ children }) {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api${url}`, {
+      const response = await fetch(`${ API_BASE_URL }/api${url}`, {
         ...defaultOptions,
         ...options,
         headers: {

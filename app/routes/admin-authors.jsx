@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { Link, Navigate } from 'react-router'
 import { useAdmin } from '../context/AdminContext.jsx'
+import { API_BASE_URL } from "../utils/api";
 
 export default function AdminAuthors() {
   const { adminFetch, isAdminLoggedIn, adminLogout } = useAdmin()

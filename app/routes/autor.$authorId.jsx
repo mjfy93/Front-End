@@ -1,10 +1,11 @@
 import { useLoaderData, Link, useNavigate } from "react-router";
+import { API_BASE_URL } from "../utils/api";
 
 export async function loader({ params }) {
     const { authorId } = params;
 
     const response = await fetch(
-        `http://127.0.0.1:5000/api/authors/${authorId}/profile`
+        `${API_BASE_URL}/api/authors/${authorId}/profile`
     );
 
     if (!response.ok) {
@@ -120,8 +121,8 @@ export default function AutorPerfil() {
                                             className="card-img-top"
                                             alt={libro.titulo_libro}
                                             style={{
-                                                height: '350px',
-                                                objectFit: 'contain',
+                                                height: '500px',
+                                                objectFit: 'cover',
                                                 cursor: 'pointer'
                                             }}
                                             onClick={() => navigate(`/detalle/${libro.id_libros}`)}

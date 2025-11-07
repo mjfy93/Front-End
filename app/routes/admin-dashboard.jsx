@@ -2,6 +2,7 @@
 import { Link, Navigate } from 'react-router'
 import { useState, useEffect } from 'react'
 import { useAdmin } from '../context/AdminContext.jsx'
+import { API_BASE_URL } from "../utils/api";
 
 export default function AdminDashboard() {
   const { adminFetch, isAdminLoggedIn, adminLogout, loading: authLoading } = useAdmin()

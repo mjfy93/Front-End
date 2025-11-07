@@ -1,10 +1,11 @@
 import { useLoaderData, Link, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
+import { API_BASE_URL } from "../utils/api";
 
 export async function loader({ params }) {
     const { bookId } = params;
-    const response = await fetch(`http://127.0.0.1:5000/api/books/${bookId}`);
+    const response = await fetch(`${API_BASE_URL}/api/books/${bookId}`);
     if (!response.ok) {
         throw new Response("Libro no encontrado", { status: 404 });
     }
@@ -36,7 +37,7 @@ export default function DetalleLibro() {
             setIsLoadingUserData(true);
             try {
                 const response = await fetch(
-                    `http://127.0.0.1:5000/api/my-library/books/${book.id}`,
+                    `${API_BASE_URL}/api/my-library/books/${book.id}`,
                     {
                         headers: {
                             'Authorization': `Bearer ${auth.user.token}`
@@ -93,7 +94,7 @@ export default function DetalleLibro() {
 
         try {
             const response = await fetch(
-                `http://127.0.0.1:5000/api/my-library/books`,
+                `${API_BASE_URL}/api/my-library/books`,
                 {
                     method: 'POST',
                     headers: {
@@ -130,7 +131,7 @@ export default function DetalleLibro() {
 
         try {
             const response = await fetch(
-                `http://127.0.0.1:5000/api/user/books/${book.id}/rating`,
+                `${API_BASE_URL}/api/user/books/${book.id}/rating`,
                 {
                     method: 'POST',
                     headers: {
@@ -250,7 +251,7 @@ export default function DetalleLibro() {
                 <div className="col-md-8">
                     <h1>{book.title}</h1>
                     <h3 className="text-muted">{book.author}</h3>
-                    <span className="badge bg-light mb-3">{book.genre}</span>
+                    <span className="badge bg-light text-dark mb-3">{book.genre}</span>
 
                     {/* Display current rating if exists */}
                     {rating > 0 && (

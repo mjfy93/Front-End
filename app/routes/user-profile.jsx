@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../context/AuthContext.jsx';
+import { API_BASE_URL } from "../utils/api";
 
 export default function UserProfile() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function UserProfile() {
       }
 
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/profile', {
+        const response = await fetch(`${API_BASE_URL}/api/profile`, {
           headers: {
             'Authorization': `Bearer ${auth.user.token}`
           }

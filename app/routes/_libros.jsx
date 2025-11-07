@@ -1,10 +1,11 @@
 import { useLoaderData, Link, useParams } from "react-router";
+import { API_BASE_URL } from "../utils/api";
 
 
 
 
 export async function loader() {
-    const response = await fetch('http://127.0.0.1:5000/api/books')
+    const response = await fetch(`${API_BASE_URL}/api/books`)
 
 
 

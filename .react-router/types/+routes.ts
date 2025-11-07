@@ -38,12 +38,6 @@ type Pages = {
       "bookId": string;
     };
   };
-  "/users": {
-    params: {};
-  };
-  "/contact": {
-    params: {};
-  };
   "/login": {
     params: {};
   };
@@ -87,7 +81,7 @@ type Pages = {
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/libros" | "/autores" | "/autores/:authorId" | "/generosTodos" | "/generosTodos/:slug" | "/detalle/:bookId" | "/users" | "/contact" | "/login" | "/register" | "/:bookId/resena" | "/biblioteca" | "/profile" | "/admin/login" | "/admin" | "/admin/users" | "/admin/books" | "/admin/authors" | "/admin/books/new" | "/admin/authors/new";
+    page: "/" | "/libros" | "/autores" | "/autores/:authorId" | "/generosTodos" | "/generosTodos/:slug" | "/detalle/:bookId" | "/login" | "/register" | "/:bookId/resena" | "/biblioteca" | "/profile" | "/admin/login" | "/admin" | "/admin/users" | "/admin/books" | "/admin/authors" | "/admin/books/new" | "/admin/authors/new";
   };
   "routes/_index.jsx": {
     id: "routes/_index";
@@ -116,14 +110,6 @@ type RouteFiles = {
   "routes/detalle.$bookId.jsx": {
     id: "routes/detalle.$bookId";
     page: "/detalle/:bookId";
-  };
-  "routes/users.jsx": {
-    id: "routes/users";
-    page: "/users";
-  };
-  "routes/contact.jsx": {
-    id: "routes/contact";
-    page: "/contact";
   };
   "routes/login.jsx": {
     id: "routes/login";
@@ -184,8 +170,6 @@ type RouteModules = {
   "routes/_generosTodos": typeof import("./app/routes/_generosTodos.jsx");
   "routes/genero.$slug": typeof import("./app/routes/genero.$slug.jsx");
   "routes/detalle.$bookId": typeof import("./app/routes/detalle.$bookId.jsx");
-  "routes/users": typeof import("./app/routes/users.jsx");
-  "routes/contact": typeof import("./app/routes/contact.jsx");
   "routes/login": typeof import("./app/routes/login.jsx");
   "routes/register": typeof import("./app/routes/register.jsx");
   "routes/$bookId.resena": typeof import("./app/routes/$bookId.resena.jsx");

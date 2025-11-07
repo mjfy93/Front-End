@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
 
 export async function loader() {
-  const response = await fetch('http://127.0.0.1:5000/api/books');
+  const response = await fetch('${API_BASE_URL}/api/books');
   return response.json();
 }
 
@@ -21,7 +21,7 @@ export default function Navbar() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      authFetch('http://127.0.0.1:5000/api/my-library')
+      authFetch('${API_BASE_URL}/api/my-library')
         .then(response => {
           if (response.ok) {
             return response.json();

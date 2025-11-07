@@ -1,8 +1,9 @@
 import { useLoaderData, Link } from "react-router";
+import { API_BASE_URL } from "../utils/api";
 
 export async function loader() {
 
-    const genresResponse = await fetch('http://127.0.0.1:5000/api/books/genres');
+    const genresResponse = await fetch(`${API_BASE_URL}/api/books/genres`);
     const genresData = await genresResponse.json();
 
 
@@ -14,14 +15,14 @@ export async function loader() {
                 .replace(/\s+/g, '-');
 
             const booksResponse = await fetch(
-                `http://127.0.0.1:5000/api/books/genre/${genreSlug}`
+                `${API_BASE_URL}/api/books/genre/${genreSlug}`
             );
             const books = await booksResponse.json();
 
             return {
                 name: genre,
                 slug: genreSlug,
-                books: books
+                books: books.slice(0, 10)
             };
         })
     );
@@ -39,7 +40,7 @@ export default function Genero() {
 
             <div>
                 {genres.map((genre, index) => (
-                    <div className="container my-4" key={index}>
+                    <div className="container my-4" key={index} style={{ width: '1000px' }}>
                         <h2>{genre.name}</h2>
                         <div className="bookstand">
                             <div className="overflow-auto h-25">
@@ -50,12 +51,12 @@ export default function Genero() {
                                                 src={book.cover_url || "https://placehold.co/150"}
                                                 className="img-fluid img-thumbnail"
                                                 alt={book.title}
-                                                style={{ width: '150px', height: '200px', objectFit: 'cover' }}
+                                                style={{ width: '200px', height: '250px', objectFit: 'cover' }}
                                             />
-                                            <h5 className="text-truncate" style={{ maxWidth: '150px' }}>
+                                            <h5 className="text-truncate" style={{ maxWidth: '200px' }}>
                                                 {book.title}
                                             </h5>
-                                            <h6 className="text-wrap">{book.author}</h6>
+                                            <h6 className="text-truncate" style={{ maxWidth: '200px' }}>{book.author}</h6>
                                             <Link
                                                 to={`/detalle/${book.id}`}
                                                 className="btn btn-light btn-sm"

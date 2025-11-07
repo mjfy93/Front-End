@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useAdmin } from '../context/AdminContext.jsx'
+import { API_BASE_URL } from "../utils/api";
 
 export default function AdminNewAuthor() {
   const navigate = useNavigate()

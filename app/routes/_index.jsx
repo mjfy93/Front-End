@@ -1,9 +1,10 @@
 import { useLoaderData, Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
+import { API_BASE_URL } from "../utils/api";
 
 export async function loader() {
-  const response = await fetch('http://127.0.0.1:5000/api/books');
+  const response = await fetch(`${API_BASE_URL}/api/books`);
   return response.json();
 }
 
@@ -21,7 +22,7 @@ export default function Home() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      authFetch('http://127.0.0.1:5000/api/my-library')
+      authFetch(`${API_BASE_URL}/api/my-library`)
         .then(response => {
           if (response.ok) {
             return response.json();

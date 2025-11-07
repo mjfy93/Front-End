@@ -1,10 +1,11 @@
 import { useLoaderData, Link } from "react-router";
+import { API_BASE_URL } from "../utils/api";
 
 export async function loader({ params }) {
     const { slug } = params;
 
 
-    const response = await fetch(`http://127.0.0.1:5000/api/books/genre/${slug}`);
+    const response = await fetch(`${API_BASE_URL}/api/books/genre/${slug}`);
     const books = await response.json();
 
 

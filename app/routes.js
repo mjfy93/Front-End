@@ -6,8 +6,6 @@ export default [
     { path: '/generosTodos', file: 'routes/_generosTodos.jsx' },
     { path: '/generosTodos/:slug', file: 'routes/genero.$slug.jsx' },
     { path: '/detalle/:bookId', file: 'routes/detalle.$bookId.jsx' },
-    { path: '/users', file: 'routes/users.jsx' },
-    { path: '/contact', file: 'routes/contact.jsx' },
     { path: '/login', file: 'routes/login.jsx' },
     { path: '/register', file: 'routes/register.jsx' },
     { path: '/:bookId/resena', file: 'routes/$bookId.resena.jsx' },
