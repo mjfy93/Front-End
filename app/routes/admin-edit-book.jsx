@@ -2,18 +2,12 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate, Navigate } from 'react-router'
 import { useAdmin } from '../context/AdminContext.jsx'
-import { API_BASE_URL } from "../utils/api";
+import LoadingSpinner from '../components/LoadingSpinner.jsx'
 
 export default function AdminEditBook() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { adminFetch, isAdminLoggedIn, adminLogout } = useAdmin()
-  
-  // Redirigir si no está logueado
-  if (!isAdminLoggedIn()) {
-    return <Navigate to="api/admin/login" replace />
-  }
-
+  const { adminFetch, isAdminLoggedIn, adminLogout, loading: authLoading, isInitialized } = useAdmin()
   const [book, setBook] = useState(null)
   const [authors, setAuthors] = useState([])
   const [loading, setLoading] = useState(true)
@@ -21,8 +15,19 @@ export default function AdminEditBook() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    loadBookAndAuthors()
-  }, [id])
+    if (isAdminLoggedIn()) {
+      loadBookAndAuthors()
+    }
+  }, [isAdminLoggedIn, id])
+
+  // Condicionales DESPUÉS de todos los hooks
+  if (authLoading || !isInitialized) {
+    return <LoadingSpinner />
+  }
+
+  if (!isAdminLoggedIn()) {
+    return <Navigate to="/admin/login" replace />
+  }
 
   const loadBookAndAuthors = async () => {
     try {
@@ -95,17 +100,7 @@ export default function AdminEditBook() {
   }
 
   if (loading) {
-    return (
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-12 d-flex justify-content-center align-items-center min-vh-100">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Cargando...</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+    return <LoadingSpinner />
   }
 
   if (!book) {
@@ -165,6 +160,7 @@ export default function AdminEditBook() {
                 {error}
               </div>
             )}
+
             <div className="row">
               <div className="col-md-8">
                 <div className="card">

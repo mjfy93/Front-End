@@ -10,7 +10,7 @@ export default function AdminAuthorDetail() {
   const { adminFetch, isAdminLoggedIn, adminLogout } = useAdmin()
   
   // Redirigir si no está logueado
-  if (!isAdminLoggedIn()) {
+  if (!isAdminLoggedIn) {
     return <Navigate to="/admin/login" replace />
   }
 

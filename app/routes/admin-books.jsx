@@ -1,11 +1,11 @@
 // routes/admin-books.jsx
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router'
+import { Link, Navigate } from 'react-router'
 import { useAdmin } from '../context/AdminContext.jsx'
-import { API_BASE_URL } from "../utils/api";
+import LoadingSpinner from '../components/LoadingSpinner.jsx'
 
 export default function AdminBooks() {
-  const { adminFetch, isAdminLoggedIn } = useAdmin()
+  const { adminFetch, isAdminLoggedIn, adminLogout, loading: authLoading, isInitialized } = useAdmin()
   const [books, setBooks] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -16,6 +16,15 @@ export default function AdminBooks() {
       loadBooks()
     }
   }, [isAdminLoggedIn])
+
+  // Condicionales DESPUÉS de todos los hooks
+  if (authLoading || !isInitialized) {
+    return <LoadingSpinner />
+  }
+
+  if (!isAdminLoggedIn()) {
+    return <Navigate to="/admin/login" replace />
+  }
 
   const loadBooks = async () => {
     try {
@@ -55,6 +64,12 @@ export default function AdminBooks() {
     }
   }
 
+  const handleLogout = () => {
+    if (window.confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+      adminLogout()
+    }
+  }
+
   const filteredBooks = books.filter(book =>
     book.titulo_libro?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (book.autor && (
@@ -64,17 +79,7 @@ export default function AdminBooks() {
   )
 
   if (loading) {
-    return (
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-12 d-flex justify-content-center align-items-center min-vh-100">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Cargando...</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+    return <LoadingSpinner />
   }
 
   return (
@@ -96,9 +101,9 @@ export default function AdminBooks() {
               <Link to="/admin/authors" className="nav-link mb-2">
                 <i className="fas fa-pen-fancy me-2"></i>Gestión de Autores
               </Link>
-              <Link to="/admin/" className="nav-link mt-4">
-                <i className="fas fa-sign-out-alt me-2"></i>Volver al Sitio
-              </Link>
+              <button onClick={handleLogout} className="nav-link mt-4 text-start border-0 bg-transparent">
+                <i className="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+              </button>
             </nav>
           </div>
         </div>

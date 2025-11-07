@@ -2,17 +2,11 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, Navigate } from 'react-router'
 import { useAdmin } from '../context/AdminContext.jsx'
-import { API_BASE_URL } from "../utils/api";
+import LoadingSpinner from '../components/LoadingSpinner.jsx'
 
 export default function AdminNewBook() {
   const navigate = useNavigate()
-  const { adminFetch, isAdminLoggedIn, adminLogout } = useAdmin()
-  
-  // Redirigir si no está logueado
-  if (!isAdminLoggedIn()) {
-    return <Navigate to="api/admin/login" replace />
-  }
-
+  const { adminFetch, isAdminLoggedIn, adminLogout, loading: authLoading, isInitialized } = useAdmin()
   const [book, setBook] = useState({
     titulo_libro: '',
     id_autor: '',
@@ -26,8 +20,19 @@ export default function AdminNewBook() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    loadAuthors()
-  }, [])
+    if (isAdminLoggedIn()) {
+      loadAuthors()
+    }
+  }, [isAdminLoggedIn])
+
+  // Condicionales DESPUÉS de todos los hooks
+  if (authLoading || !isInitialized) {
+    return <LoadingSpinner />
+  }
+
+  if (!isAdminLoggedIn()) {
+    return <Navigate to="/admin/login" replace />
+  }
 
   const loadAuthors = async () => {
     try {
@@ -121,7 +126,6 @@ export default function AdminNewBook() {
                 {error}
               </div>
             )}
-
 
             <div className="row">
               <div className="col-md-8">

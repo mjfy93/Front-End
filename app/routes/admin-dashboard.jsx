@@ -2,10 +2,10 @@
 import { Link, Navigate } from 'react-router'
 import { useState, useEffect } from 'react'
 import { useAdmin } from '../context/AdminContext.jsx'
-import { API_BASE_URL } from "../utils/api";
+import LoadingSpinner from '../components/LoadingSpinner.jsx'
 
 export default function AdminDashboard() {
-  const { adminFetch, isAdminLoggedIn, adminLogout, loading: authLoading } = useAdmin()
+  const { adminFetch, isAdminLoggedIn, adminLogout, loading: authLoading, isInitialized } = useAdmin()
   const [stats, setStats] = useState({
     totals: {
       total_users: 0,
@@ -19,8 +19,18 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  // Redirigir si no está logueado
-  if (!authLoading && !isAdminLoggedIn()) {
+  useEffect(() => {
+    if (isAdminLoggedIn()) {
+      loadDashboardStats()
+    }
+  }, [isAdminLoggedIn])
+
+  // Condicionales DESPUÉS de todos los hooks
+  if (authLoading || !isInitialized) {
+    return <LoadingSpinner />
+  }
+
+  if (!isAdminLoggedIn()) {
     return <Navigate to="/admin/login" replace />
   }
 
@@ -47,30 +57,10 @@ export default function AdminDashboard() {
     }
   }
 
-  useEffect(() => {
-    if (isAdminLoggedIn()) {
-      loadDashboardStats()
-    }
-  }, [isAdminLoggedIn])
-
   const handleLogout = () => {
     if (window.confirm('¿Estás seguro de que quieres cerrar sesión?')) {
       adminLogout()
     }
-  }
-
-  if (authLoading) {
-    return (
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-12 d-flex justify-content-center align-items-center min-vh-100">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Cargando...</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
   }
 
   return (

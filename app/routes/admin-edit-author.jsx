@@ -2,18 +2,12 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate, Navigate } from 'react-router'
 import { useAdmin } from '../context/AdminContext.jsx'
-import { API_BASE_URL } from "../utils/api";
+import LoadingSpinner from '../components/LoadingSpinner.jsx'
 
 export default function AdminEditAuthor() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { adminFetch, isAdminLoggedIn, adminLogout } = useAdmin()
-  
-  // Redirigir si no está logueado
-  if (!isAdminLoggedIn()) {
-    return <Navigate to="api/admin/login" replace />
-  }
-
+  const { adminFetch, isAdminLoggedIn, adminLogout, loading: authLoading, isInitialized } = useAdmin()
   const [author, setAuthor] = useState({
     nombre_autor: '',
     apellido_autor: '',
@@ -25,8 +19,19 @@ export default function AdminEditAuthor() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    loadAuthor()
-  }, [id])
+    if (isAdminLoggedIn()) {
+      loadAuthor()
+    }
+  }, [isAdminLoggedIn, id])
+
+  // Condicionales DESPUÉS de todos los hooks
+  if (authLoading || !isInitialized) {
+    return <LoadingSpinner />
+  }
+
+  if (!isAdminLoggedIn()) {
+    return <Navigate to="/admin/login" replace />
+  }
 
   const loadAuthor = async () => {
     try {
@@ -109,17 +114,7 @@ export default function AdminEditAuthor() {
   }
 
   if (loading) {
-    return (
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-12 d-flex justify-content-center align-items-center min-vh-100">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Cargando...</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+    return <LoadingSpinner />
   }
 
   return (

@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useAdmin } from '../context/AdminContext.jsx'
-import { API_BASE_URL } from "../utils/api";
 
 export default function AdminLogin() {
   const navigate = useNavigate()
@@ -55,14 +54,6 @@ export default function AdminLogin() {
     }))
     // Limpiar error cuando el usuario empiece a escribir
     if (error) setError('')
-  }
-
-  // Datos de prueba para desarrollo
-  const fillTestCredentials = () => {
-    setFormData({
-      username: 'admin@booketlist.com',
-      password: 'admin123'
-    })
   }
 
   return (
@@ -122,9 +113,6 @@ export default function AdminLogin() {
               )}
             </button>
           </form>
-
-          {/* Solo mostrar en desarrollo */}
-         
         </div>
       </div>
     </div>

@@ -8,30 +8,37 @@ const AdminContext = createContext()
 export function AdminProvider({ children }) {
   const [admin, setAdmin] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [isInitialized, setIsInitialized] = useState(false)
   const navigate = useNavigate()
 
-  // Verificar si el admin está autenticado al cargar la app
+  // Verificar autenticación SOLO en el cliente
   useEffect(() => {
+    const checkAdminAuth = () => {
+      try {
+        // Solo ejecutar en el cliente
+        if (typeof window !== 'undefined') {
+          const token = localStorage.getItem('adminToken')
+          const adminData = localStorage.getItem('adminData')
+          
+          if (token && adminData) {
+            setAdmin(JSON.parse(adminData))
+          }
+        }
+      } catch (error) {
+        console.error('Error checking admin auth:', error)
+        // Limpiar datos corruptos
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('adminToken')
+          localStorage.removeItem('adminData')
+        }
+      } finally {
+        setLoading(false)
+        setIsInitialized(true)
+      }
+    }
+
     checkAdminAuth()
   }, [])
-
-  const checkAdminAuth = () => {
-    try {
-      const token = localStorage.getItem('adminToken')
-      const adminData = localStorage.getItem('adminData')
-      
-      if (token && adminData) {
-        setAdmin(JSON.parse(adminData))
-      }
-    } catch (error) {
-      console.error('Error checking admin auth:', error)
-      // Limpiar datos corruptos
-      localStorage.removeItem('adminToken')
-      localStorage.removeItem('adminData')
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const adminLogin = async (email, password) => {
     try {
@@ -51,9 +58,12 @@ export function AdminProvider({ children }) {
       if (response.ok) {
         const data = await response.json()
         
-        // Guardar token y datos en localStorage
-        localStorage.setItem('adminToken', data.access_token)
-        localStorage.setItem('adminData', JSON.stringify(data.admin))
+        // Guardar token y datos en localStorage (solo en cliente)
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('adminToken', data.access_token)
+          localStorage.setItem('adminData', JSON.stringify(data.admin))
+        }
+        
         setAdmin(data.admin)
         
         return { success: true }
@@ -70,19 +80,25 @@ export function AdminProvider({ children }) {
   }
 
   const adminLogout = () => {
-    // Limpiar localStorage
-    localStorage.removeItem('adminToken')
-    localStorage.removeItem('adminData')
+    // Limpiar localStorage (solo en cliente)
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('adminToken')
+      localStorage.removeItem('adminData')
+    }
     
     // Limpiar estado
     setAdmin(null)
     
     // Redirigir al login
-    navigate('admin/login')
+    navigate('/admin/login')
   }
 
   const adminFetch = async (url, options = {}) => {
-    const token = localStorage.getItem('adminToken')
+    let token = null
+    // Obtener token solo en cliente
+    if (typeof window !== 'undefined') {
+      token = localStorage.getItem('adminToken')
+    }
     
     const defaultOptions = {
       headers: {
@@ -93,7 +109,7 @@ export function AdminProvider({ children }) {
     }
 
     try {
-      const response = await fetch(`${ API_BASE_URL }/api${url}`, {
+      const response = await fetch(`${API_BASE_URL}/api${url}`, {
         ...defaultOptions,
         ...options,
         headers: {
@@ -115,8 +131,11 @@ export function AdminProvider({ children }) {
     }
   }
 
+  // Función segura que no causa problemas de SSR
   const isAdminLoggedIn = () => {
-    return !!localStorage.getItem('adminToken')
+    // Durante SSR, retornar false hasta que se verifique en el cliente
+    if (!isInitialized) return false
+    return !!admin
   }
 
   const value = {
@@ -126,7 +145,7 @@ export function AdminProvider({ children }) {
     adminLogout,
     adminFetch,
     isAdminLoggedIn,
-    checkAdminAuth
+    isInitialized
   }
 
   return (

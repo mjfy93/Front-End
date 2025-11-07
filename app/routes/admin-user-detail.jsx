@@ -2,18 +2,12 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate, Navigate } from 'react-router'
 import { useAdmin } from '../context/AdminContext.jsx'
-import { API_BASE_URL } from "../utils/api";
+import LoadingSpinner from '../components/LoadingSpinner.jsx'
 
 export default function AdminUserDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { adminFetch, isAdminLoggedIn, adminLogout } = useAdmin()
-  
-  // Redirigir si no está logueado
-  if (!isAdminLoggedIn()) {
-    return <Navigate to="api/admin/login" replace />
-  }
-
+  const { adminFetch, isAdminLoggedIn, adminLogout, loading: authLoading, isInitialized } = useAdmin()
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -23,6 +17,15 @@ export default function AdminUserDetail() {
       loadUserDetail()
     }
   }, [isAdminLoggedIn, id])
+
+  // Condicionales DESPUÉS de todos los hooks
+  if (authLoading || !isInitialized) {
+    return <LoadingSpinner />
+  }
+
+  if (!isAdminLoggedIn()) {
+    return <Navigate to="/admin/login" replace />
+  }
 
   const loadUserDetail = async () => {
     try {
@@ -68,17 +71,7 @@ export default function AdminUserDetail() {
   }
 
   if (loading) {
-    return (
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-12 d-flex justify-content-center align-items-center min-vh-100">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Cargando...</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+    return <LoadingSpinner />
   }
 
   if (!user) {
@@ -137,7 +130,6 @@ export default function AdminUserDetail() {
               </div>
             )}
 
-            {/* Información Básica del Usuario */}
             <div className="card mb-4">
               <div className="card-body">
                 <div className="row align-items-center">

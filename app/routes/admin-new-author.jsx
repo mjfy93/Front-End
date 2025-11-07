@@ -1,13 +1,12 @@
 // routes/admin-new-author.jsx
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { Link, useNavigate, Navigate } from 'react-router'
 import { useAdmin } from '../context/AdminContext.jsx'
-import { API_BASE_URL } from "../utils/api";
+import LoadingSpinner from '../components/LoadingSpinner.jsx'
 
 export default function AdminNewAuthor() {
   const navigate = useNavigate()
-  const { adminFetch } = useAdmin()
-  
+  const { adminFetch, isAdminLoggedIn, adminLogout, loading: authLoading, isInitialized } = useAdmin()
   const [author, setAuthor] = useState({
     nombre_autor: '',
     apellido_autor: '',
@@ -16,6 +15,15 @@ export default function AdminNewAuthor() {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Condicionales DESPUÉS de todos los hooks
+  if (authLoading || !isInitialized) {
+    return <LoadingSpinner />
+  }
+
+  if (!isAdminLoggedIn()) {
+    return <Navigate to="/admin/login" replace />
+  }
 
   const handleSave = async () => {
     if (!author.nombre_autor || !author.apellido_autor) {
@@ -51,6 +59,12 @@ export default function AdminNewAuthor() {
     setAuthor({...author, [field]: value})
   }
 
+  const handleLogout = () => {
+    if (window.confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+      adminLogout()
+    }
+  }
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -70,9 +84,9 @@ export default function AdminNewAuthor() {
               <Link to="/admin/authors" className="nav-link mb-2">
                 <i className="fas fa-pen-fancy me-2"></i>Gestión de Autores
               </Link>
-              <Link to="/admin/dashboard" className="nav-link mt-4">
-                <i className="fas fa-sign-out-alt me-2"></i>Volver al Sitio
-              </Link>
+              <button onClick={handleLogout} className="nav-link mt-4 text-start border-0 bg-transparent">
+                <i className="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+              </button>
             </nav>
           </div>
         </div>
