@@ -18,12 +18,10 @@ export default [
     { path: '/admin/authors', file: 'routes/admin-authors.jsx' },
     { path: '/admin/books/new', file: 'routes/admin-new-book.jsx' },
     { path: '/admin/authors/new', file: 'routes/admin-new-author.jsx' },
-    
-    // Rutas dinámicas
-    //{ path: '/admin/books/edit/:id', file: 'routes/admin-edit-book.jsx' },
-    //{ path: '/admin/authors/:id', file: 'routes/admin-author-detail.jsx' },
-    //{ path: '/admin/users/:id', file: 'routes/admin-user-detail.jsx' },
-    //{ path: '/admin/authors/:id/books', file: 'routes/admin-author-books.jsx' },
+     { path: '/admin/books/edit/:id', file: 'routes/admin-edit-book.jsx' },
+    { path: '/admin/authors/:id', file: 'routes/admin-author-detail.jsx' },
+    { path: '/admin/users/:id', file: 'routes/admin-user-detail.jsx' },
+    { path: '/admin/authors/:id/books', file: 'routes/admin-author-books.jsx' },
 
    
 ]

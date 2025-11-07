@@ -76,12 +76,32 @@ type Pages = {
   "/admin/authors/new": {
     params: {};
   };
+  "/admin/books/edit/:id": {
+    params: {
+      "id": string;
+    };
+  };
+  "/admin/authors/:id": {
+    params: {
+      "id": string;
+    };
+  };
+  "/admin/users/:id": {
+    params: {
+      "id": string;
+    };
+  };
+  "/admin/authors/:id/books": {
+    params: {
+      "id": string;
+    };
+  };
 };
 
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/libros" | "/autores" | "/autores/:authorId" | "/generosTodos" | "/generosTodos/:slug" | "/detalle/:bookId" | "/login" | "/register" | "/:bookId/resena" | "/biblioteca" | "/profile" | "/admin/login" | "/admin" | "/admin/users" | "/admin/books" | "/admin/authors" | "/admin/books/new" | "/admin/authors/new";
+    page: "/" | "/libros" | "/autores" | "/autores/:authorId" | "/generosTodos" | "/generosTodos/:slug" | "/detalle/:bookId" | "/login" | "/register" | "/:bookId/resena" | "/biblioteca" | "/profile" | "/admin/login" | "/admin" | "/admin/users" | "/admin/books" | "/admin/authors" | "/admin/books/new" | "/admin/authors/new" | "/admin/books/edit/:id" | "/admin/authors/:id" | "/admin/users/:id" | "/admin/authors/:id/books";
   };
   "routes/_index.jsx": {
     id: "routes/_index";
@@ -159,6 +179,22 @@ type RouteFiles = {
     id: "routes/admin-new-author";
     page: "/admin/authors/new";
   };
+  "routes/admin-edit-book.jsx": {
+    id: "routes/admin-edit-book";
+    page: "/admin/books/edit/:id";
+  };
+  "routes/admin-author-detail.jsx": {
+    id: "routes/admin-author-detail";
+    page: "/admin/authors/:id";
+  };
+  "routes/admin-user-detail.jsx": {
+    id: "routes/admin-user-detail";
+    page: "/admin/users/:id";
+  };
+  "routes/admin-author-books.jsx": {
+    id: "routes/admin-author-books";
+    page: "/admin/authors/:id/books";
+  };
 };
 
 type RouteModules = {
@@ -182,4 +218,8 @@ type RouteModules = {
   "routes/admin-authors": typeof import("./app/routes/admin-authors.jsx");
   "routes/admin-new-book": typeof import("./app/routes/admin-new-book.jsx");
   "routes/admin-new-author": typeof import("./app/routes/admin-new-author.jsx");
+  "routes/admin-edit-book": typeof import("./app/routes/admin-edit-book.jsx");
+  "routes/admin-author-detail": typeof import("./app/routes/admin-author-detail.jsx");
+  "routes/admin-user-detail": typeof import("./app/routes/admin-user-detail.jsx");
+  "routes/admin-author-books": typeof import("./app/routes/admin-author-books.jsx");
 };
