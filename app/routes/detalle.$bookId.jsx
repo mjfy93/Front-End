@@ -5,18 +5,38 @@ import { API_BASE_URL } from "../utils/api";
 
 export async function loader({ params }) {
     const { bookId } = params;
-    const response = await fetch(`${API_BASE_URL}/api/books/${bookId}`);
-    if (!response.ok) {
-        throw new Response("Libro no encontrado", { status: 404 });
+    
+    try {
+        // Obtener información del libro
+        const bookResponse = await fetch(`${API_BASE_URL}/api/books/${bookId}`);
+        if (!bookResponse.ok) {
+            throw new Response("Libro no encontrado", { status: 404 });
+        }
+        const book = await bookResponse.json();
+
+        // Obtener reseñas del libro
+        const reviewsResponse = await fetch(`${API_BASE_URL}/api/books/${bookId}/reviews`);
+        let reviews = [];
+        if (reviewsResponse.ok) {
+            const reviewsData = await reviewsResponse.json();
+            reviews = Array.isArray(reviewsData) ? reviewsData : [];
+        }
+
+        // Obtener estadísticas de reseñas
+        const statsResponse = await fetch(`${API_BASE_URL}/api/books/${bookId}/reviews/stats`);
+        let reviewsStats = { total_reviews: 0, average_rating: 0 };
+        if (statsResponse.ok) {
+            reviewsStats = await statsResponse.json();
+        }
+
+        return { book, reviews, reviewsStats };
+    } catch (error) {
+        throw new Response("Error al cargar el libro", { status: 500 });
     }
-    const book = await response.json();
-
-
-    return { book };
 }
 
 export default function DetalleLibro() {
-    const { book } = useLoaderData();
+    const { book, reviews, reviewsStats } = useLoaderData();
     const navigate = useNavigate();
     const auth = useAuth();
 
@@ -26,8 +46,7 @@ export default function DetalleLibro() {
     const [showDropdown, setShowDropdown] = useState(false);
     const [isLoadingUserData, setIsLoadingUserData] = useState(false);
 
-    // Fetch user's reading state and rating after component mounts
-    // Fetch user's reading state and rating after component mounts
+    // Fetch user's reading state and rating
     useEffect(() => {
         const fetchUserBookData = async () => {
             if (!auth?.isAuthenticated || !auth?.user?.token) {
@@ -36,7 +55,6 @@ export default function DetalleLibro() {
 
             setIsLoadingUserData(true);
             try {
-                // ✅ FIXED: Fetch complete library to check all states
                 const response = await fetch(
                     `${API_BASE_URL}/api/my-library`,
                     {
@@ -50,17 +68,17 @@ export default function DetalleLibro() {
                     const library = await response.json();
                     const bookId = parseInt(book.id);
 
-                    // ✅ Check in quiero_leer
+                    // Check in quiero_leer
                     const inQuieroLeer = library.quiero_leer?.find(
                         item => item.book.id_libros === bookId
                     );
 
-                    // ✅ Check in leyendo
+                    // Check in leyendo
                     const inLeyendo = library.leyendo?.find(
                         item => item.book.id_libros === bookId
                     );
 
-                    // ✅ Check in leido (Rating table)
+                    // Check in leido (Rating table)
                     const inLeido = library.leido?.find(
                         item => item.book.id_libros === bookId
                     );
@@ -76,11 +94,6 @@ export default function DetalleLibro() {
                         setReadingState('leido');
                         setRating(inLeido.calificacion || 0);
                     }
-
-                    console.log('User book state loaded:', {
-                        readingState: inQuieroLeer ? 'quiero_leer' : inLeyendo ? 'leyendo' : inLeido ? 'leido' : 'none',
-                        rating: inLeido?.calificacion
-                    });
                 }
             } catch (error) {
                 console.error("Error fetching user data:", error);
@@ -92,7 +105,7 @@ export default function DetalleLibro() {
         fetchUserBookData();
     }, [auth?.isAuthenticated, auth?.user?.token, book.id]);
 
-    // Helper functions using your auth context
+    // Helper functions
     const isLoggedIn = () => {
         return auth?.isAuthenticated || false;
     };
@@ -101,21 +114,20 @@ export default function DetalleLibro() {
         return auth?.user?.token || null;
     };
 
-
     const genreSlug = book.genre
-        .toLowerCase()
+        ?.toLowerCase()
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s+/g, '-');
+        .replace(/\s+/g, '-') || 'genero';
 
     const readingStates = [
-        { value: 'quiero_leer', label: 'Quiero Leerlo' },
-        { value: 'leyendo', label: 'Leyendo' },
-        { value: 'leido', label: 'Leído' }
+        { value: 'quiero_leer', label: 'Quiero Leerlo', icon: 'heart' },
+        { value: 'leyendo', label: 'Leyendo', icon: 'book-open' },
+        { value: 'leido', label: 'Leído', icon: 'check-circle' }
     ];
 
     const getReadingStateLabel = () => {
         const state = readingStates.find(s => s.value === readingState);
-        return state ? state.label : 'Estado de lectura';
+        return state ? state.label : 'Agregar a mi biblioteca';
     };
 
     const handleReadingStateChange = async (newState) => {
@@ -125,12 +137,7 @@ export default function DetalleLibro() {
             return;
         }
 
-        console.log('Changing reading state to:', newState);
-        console.log('Current state:', readingState);
-        console.log('Book ID:', book.id);
-
         try {
-            // ✅ CASE 1: User wants to mark as "leído"
             if (newState === 'leido') {
                 const response = await fetch(
                     `${API_BASE_URL}/api/my-library/books/${book.id}/mark-read`,
@@ -147,7 +154,6 @@ export default function DetalleLibro() {
                 );
 
                 if (response.ok) {
-                    console.log('Book marked as read successfully');
                     setReadingState(newState);
                     setShowDropdown(false);
                     navigate(`/libros/${book.id}/resena`);
@@ -155,9 +161,7 @@ export default function DetalleLibro() {
                     const errorData = await response.json();
                     alert(errorData.message || 'Error al marcar como leído');
                 }
-            }
-            // ✅ CASE 2: Book already in library - UPDATE state
-            else if (readingState && readingState !== 'leido') {
+            } else if (readingState && readingState !== 'leido') {
                 const response = await fetch(
                     `${API_BASE_URL}/api/my-library/books/${book.id}`,
                     {
@@ -173,16 +177,13 @@ export default function DetalleLibro() {
                 );
 
                 if (response.ok) {
-                    console.log('Reading state updated successfully');
                     setReadingState(newState);
                     setShowDropdown(false);
                 } else {
                     const errorData = await response.json();
                     alert(errorData.message || 'Error al actualizar el estado de lectura');
                 }
-            }
-            // ✅ CASE 3: Book not in library - ADD it
-            else {
+            } else {
                 const response = await fetch(
                     `${API_BASE_URL}/api/my-library/books`,
                     {
@@ -199,7 +200,6 @@ export default function DetalleLibro() {
                 );
 
                 if (response.ok) {
-                    console.log('Book added to library successfully');
                     setReadingState(newState);
                     setShowDropdown(false);
                 } else {
@@ -220,11 +220,7 @@ export default function DetalleLibro() {
             return;
         }
 
-        console.log('Setting rating to:', newRating);
-        console.log('Book ID:', book.id);
-
         try {
-
             const response = await fetch(
                 `${API_BASE_URL}/api/my-library/books/${book.id}/mark-read`,
                 {
@@ -240,10 +236,7 @@ export default function DetalleLibro() {
             );
 
             if (response.ok) {
-                console.log('Rating saved successfully');
                 setRating(newRating);
-                // Navigate to review page after rating
-                console.log('Navigating to review page');
                 navigate(`/libros/${book.id}/resena`);
             } else {
                 const errorText = await response.text();
@@ -263,7 +256,7 @@ export default function DetalleLibro() {
 
     const renderStars = () => {
         return (
-            <div className="d-flex align-items-center gap-1 my-3">
+            <div className="d-flex align-items-center justify-content-center gap-1 my-3">
                 {[1, 2, 3, 4, 5].map((star) => (
                     <button
                         key={star}
@@ -287,108 +280,291 @@ export default function DetalleLibro() {
         );
     };
 
-    return (
-        <div className="container my-4">
-            <button
-                onClick={() => navigate(-1)}
-                className="btn btn-outline-secondary mb-3"
-            >
-                ← Volver
-            </button>
-            <div className="row">
-                <div className="col-md-4 text-center">
-                    {/* ✅ Book cover image */}
-                    <img
-                        src={book.cover_url || "https://placehold.co/300x450"}
-                        alt={book.title}
-                        className="img-fluid rounded shadow"
-                        style={{ height: '300px', objectFit: 'cover' }}
-                    />
+    // ✅ FUNCIONES PARA RESEÑAS ACTUALIZADAS
+    const renderReviewStats = () => {
+        if (reviewsStats.total_reviews === 0) return null;
 
-                    <div className="d-flex flex-column gap-2 mt-3">
-                        {/* ✅ Amazon buy button */}
-                        {book.amazon_asin && (
-                    <a
-                        href = {`https://www.amazon.com/dp/${book.amazon_asin}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-warning"
-            >
-                        Comprar este libro
-                    </a>
-        )}
-
-                    {/* ✅ Link to genre page */}
-                    <Link
-                        to={`/generosTodos/${genreSlug}`}
-                        className="btn btn-outline-light"
-                    >
-                        Ver más libros como este
-                    </Link>
-
-                    {/* ✅ Star Rating */}
-                    {renderStars()}
-
-                    {/* ✅ Reading State Dropdown */}
-                    <div className="dropdown mb-3" style={{ position: 'relative' }}>
-                        <button
-                            className="btn btn-success dropdown-toggle w-100"
-                            type="button"
-                            onClick={() => setShowDropdown(!showDropdown)}
-                            disabled={isLoadingUserData}
-                        >
-                            {isLoadingUserData ? 'Cargando...' : getReadingStateLabel()}
-                        </button>
-                        {showDropdown && (
-                            <ul
-                                className="dropdown-menu show w-100"
-                                style={{ position: 'absolute', top: '100%', left: 0, zIndex: 1000 }}
-                            >
-                                {readingStates.map((state) => (
-                                    <li key={state.value}>
-                                        <button
-                                            className="dropdown-item"
-                                            onClick={() => handleReadingStateChange(state.value)}
-                                            disabled={isLoadingUserData}
-                                        >
-                                            {state.label}
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
+        return (
+            <div className="card bg-dark border-light mb-4">
+                <div className="card-body">
+                    <h5 className="card-title mb-3">
+                        <i className="fas fa-star me-2 text-warning"></i>
+                        Reseñas del Libro
+                    </h5>
+                    
+                    <div className="row text-center">
+                        <div className="col-6 mb-3">
+                            <div className="h4 text-primary mb-1">{reviewsStats.total_reviews}</div>
+                            <small className="text-muted">Total Reseñas</small>
+                        </div>
+                        <div className="col-6 mb-3">
+                            <div className="h4 text-warning mb-1">{reviewsStats.average_rating.toFixed(1)}</div>
+                            <small className="text-muted">Calificación Promedio</small>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className="col-md-8">
-                {/* ✅ Backend returns English names, so use them directly */}
-                <h1>{book.title}</h1>
+        );
+    };
 
-                <h3 className="text-muted">{book.author}</h3>
-
-                <span className="badge bg-light text-dark mb-3">{book.genre}</span>
-
-                {/* Display current rating if exists */}
-                {rating > 0 && (
-                    <div className="mb-2">
-                        <Link
-                            to={`/libros/${book.id}/resena`}
-                            className="text-decoration-none"
-                        >
-                            <span style={{ color: '#ffc107' }}>
-                                {'★'.repeat(rating)}
-                            </span>
-                            <span style={{ color: '#e0e0e0' }}>
-                                {'★'.repeat(5 - rating)}
-                            </span>
-                            <span className="ms-2 text-light">Ver/editar reseña</span>
-                        </Link>
+    const renderReviews = () => {
+        if (!reviews || reviews.length === 0) {
+            return (
+                <div className="text-center py-5">
+                    <div className="text-muted mb-3">
+                        <i className="fas fa-comment-slash fa-3x"></i>
                     </div>
-                )}
+                    <h5 className="text-muted mb-2">Este libro aún no tiene reseñas</h5>
+                    <p className="text-muted mb-4">
+                        ¡Sé el primero en compartir tu opinión!
+                    </p>
+                    {isLoggedIn() && (
+                        <Link 
+                            to={`/libros/${book.id}/resena`}
+                            className="btn btn-primary"
+                        >
+                            <i className="fas fa-edit me-2"></i>
+                            Escribir Primera Reseña
+                        </Link>
+                    )}
+                </div>
+            );
+        }
 
-                <p className="lead mt-3">{book.description}</p>
+        return (
+            <div>
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h4 className="mb-0">
+                        <i className="fas fa-comments me-2"></i>
+                        Reseñas de Lectores
+                    </h4>
+                    <span className="badge bg-primary fs-6">{reviews.length}</span>
+                </div>
+
+                <div className="row">
+                    {reviews.map((review) => (
+                        <div key={review.id_calificacion} className="col-12 mb-3">
+                            <div className="card h-100 bg-dark border-light">
+                                <div className="card-body">
+                                    {/* Header de la reseña */}
+                                    <div className="d-flex justify-content-between align-items-start mb-3">
+                                        <div className="flex-grow-1">
+                                            <h6 className="card-title mb-2 text-primary">
+                                                <i className="fas fa-user me-2"></i>
+                                                {review.usuario_nombre_completo}
+                                            </h6>
+                                            {review.calificacion && (
+                                                <div className="text-warning">
+                                                    {'★'.repeat(review.calificacion)}
+                                                    {'☆'.repeat(5 - review.calificacion)}
+                                                    <span className="text-muted ms-2">
+                                                        ({review.calificacion}/5)
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <small className="text-muted text-nowrap">
+                                            <i className="fas fa-calendar me-1"></i>
+                                            {review.created_at ? 
+                                                new Date(review.created_at).toLocaleDateString('es-ES') 
+                                                : 'Fecha no disponible'
+                                            }
+                                        </small>
+                                    </div>
+                                    
+                                    {/* Contenido de la reseña */}
+                                    {review.resena ? (
+                                        <div>
+                                            <p 
+                                                className="card-text"
+                                                style={{ lineHeight: '1.6' }}
+                                            >
+                                                {review.resena}
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <p className="card-text text-muted fst-italic mb-0">
+                                            <i className="fas fa-star me-2 text-warning"></i>
+                                            Este usuario calificó el libro pero no escribió una reseña.
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
+    return (
+        <div className="container my-4">
+            {/* Botón volver */}
+            <nav aria-label="breadcrumb" className="mb-4">
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item">
+                        <button 
+                            className="btn btn-outline-secondary btn-sm"
+                            onClick={() => navigate(-1)}
+                        >
+                            <i className="fas fa-arrow-left me-2"></i>
+                            Volver
+                        </button>
+                    </li>
+                    <li className="breadcrumb-item active text-light" aria-current="page">
+                        Detalle del Libro
+                    </li>
+                </ol>
+            </nav>
+
+            <div className="row">
+                {/* Columna izquierda - Portada y acciones */}
+                <div className="col-lg-4 col-md-5 mb-4">
+                    <div className="sticky-top" style={{ top: '20px' }}>
+                        {/* Portada del libro */}
+                        <div className="text-center mb-4">
+                            <img
+                                src={book.cover_url || "https://placehold.co/300x450"}
+                                alt={book.title}
+                                className="img-fluid rounded shadow"
+                                style={{ 
+                                    height: '350px', 
+                                    objectFit: 'cover',
+                                    width: '100%',
+                                    maxWidth: '280px'
+                                }}
+                            />
+                        </div>
+
+                        {/* Acciones del libro */}
+                        <div className="d-flex flex-column gap-3">
+                            {/* Botón Amazon */}
+                            {book.amazon_asin && (
+                                <a
+                                    href={`https://www.amazon.com/dp/${book.amazon_asin}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn btn-warning btn-lg"
+                                >
+                                    <i className="fas fa-shopping-cart me-2"></i>
+                                    Comprar en Amazon
+                                </a>
+                            )}
+
+                            {/* Botón género */}
+                            <Link
+                                to={`/generosTodos/${genreSlug}`}
+                                className="btn btn-outline-light btn-lg"
+                            >
+                                <i className="fas fa-tags me-2"></i>
+                                Más libros de {book.genre}
+                            </Link>
+
+                            {/* Calificación con estrellas */}
+                            <div className="card bg-dark border-light">
+                                <div className="card-body text-center">
+                                    <h6 className="card-title text-muted mb-3">Calificar este libro</h6>
+                                    {renderStars()}
+                                </div>
+                            </div>
+
+                            {/* Dropdown estado de lectura */}
+                            <div className="dropdown">
+                                <button
+                                    className="btn btn-success btn-lg dropdown-toggle w-100"
+                                    type="button"
+                                    onClick={() => setShowDropdown(!showDropdown)}
+                                    disabled={isLoadingUserData}
+                                >
+                                    {isLoadingUserData ? (
+                                        <>
+                                            <span className="spinner-border spinner-border-sm me-2"></span>
+                                            Cargando...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <i className="fas fa-bookmark me-2"></i>
+                                            {getReadingStateLabel()}
+                                        </>
+                                    )}
+                                </button>
+                                {showDropdown && (
+                                    <ul className="dropdown-menu w-100">
+                                        {readingStates.map((state) => (
+                                            <li key={state.value}>
+                                                <button
+                                                    className="dropdown-item"
+                                                    onClick={() => handleReadingStateChange(state.value)}
+                                                >
+                                                    <i className={`fas fa-${state.icon} me-2`}></i>
+                                                    {state.label}
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Columna derecha - Información y reseñas */}
+                <div className="col-lg-8 col-md-7">
+                    {/* Información del libro */}
+                    <div className="card bg-dark border-light mb-4">
+                        <div className="card-body">
+                            <h1 className="card-title display-6 fw-bold mb-2">{book.title}</h1>
+                            <h2 className="card-subtitle h4 text-muted mb-3">{book.author}</h2>
+                            
+                            <div className="d-flex flex-wrap gap-2 mb-3">
+                                <span className="badge bg-light text-dark fs-6">{book.genre}</span>
+                                {book.publication_date && (
+                                    <span className="badge bg-secondary fs-6">
+                                        <i className="fas fa-calendar me-1"></i>
+                                        {new Date(book.publication_date).getFullYear()}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Rating personal si existe */}
+                            {rating > 0 && (
+                                <div className="alert alert-warning mb-3">
+                                    <div className="d-flex align-items-center">
+                                        <div className="text-warning me-2 fs-5">
+                                            {'★'.repeat(rating)}{'☆'.repeat(5-rating)}
+                                        </div>
+                                        <span className="me-3 fw-bold">Tu calificación: {rating}/5</span>
+                                        <Link
+                                            to={`/libros/${book.id}/resena`}
+                                            className="btn btn-outline-primary btn-sm ms-auto"
+                                        >
+                                            <i className="fas fa-edit me-1"></i>
+                                            Ver/editar reseña
+                                        </Link>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Descripción */}
+                            <div className="mt-4">
+                                <h4 className="mb-3">
+                                    <i className="fas fa-book-open me-2"></i>
+                                    Sinopsis
+                                </h4>
+                                <p className="card-text lead" style={{ lineHeight: '1.8' }}>
+                                    {book.description}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Sección de reseñas */}
+                    <div className="reviews-section">
+                        {renderReviewStats()}
+                        {renderReviews()}
+                    </div>
+                </div>
             </div>
         </div>
-        </div >
     );
 }

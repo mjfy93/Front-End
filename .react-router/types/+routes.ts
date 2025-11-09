@@ -25,10 +25,10 @@ type Pages = {
       "authorId": string;
     };
   };
-  "/generosTodos": {
+  "/generostodos": {
     params: {};
   };
-  "/genero/:slug": {
+  "/generosTodos/:slug": {
     params: {
       "slug": string;
     };
@@ -106,7 +106,7 @@ type Pages = {
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/libros" | "/autores" | "/autores/:authorId" | "/generosTodos" | "/genero/:slug" | "/detalle/:bookId" | "/login" | "/register" | "/libros/:bookId/resena" | "/biblioteca" | "/profile" | "/admin/login" | "/admin" | "/admin/users" | "/admin/books" | "/admin/authors" | "/admin/books/new" | "/admin/authors/new" | "/admin/books/edit/:id" | "/admin/authors/:id/edit" | "/admin/authors/:id" | "/admin/users/:id" | "/admin/authors/:id/books";
+    page: "/" | "/libros" | "/autores" | "/autores/:authorId" | "/generostodos" | "/generosTodos/:slug" | "/detalle/:bookId" | "/login" | "/register" | "/libros/:bookId/resena" | "/biblioteca" | "/profile" | "/admin/login" | "/admin" | "/admin/users" | "/admin/books" | "/admin/authors" | "/admin/books/new" | "/admin/authors/new" | "/admin/books/edit/:id" | "/admin/authors/:id/edit" | "/admin/authors/:id" | "/admin/users/:id" | "/admin/authors/:id/books";
   };
   "routes/_index.jsx": {
     id: "routes/_index";
@@ -126,11 +126,11 @@ type RouteFiles = {
   };
   "routes/_generosTodos.jsx": {
     id: "routes/_generosTodos";
-    page: "/generosTodos";
+    page: "/generostodos";
   };
   "routes/genero.$slug.jsx": {
     id: "routes/genero.$slug";
-    page: "/genero/:slug";
+    page: "/generosTodos/:slug";
   };
   "routes/detalle.$bookId.jsx": {
     id: "routes/detalle.$bookId";
