@@ -81,7 +81,7 @@ export default function Login() {
                   type="email" 
                   className="form-control form-control-lg" 
                   id="email" 
-                  placeholder="tu@email.com"
+                  placeholder="correo@email.com"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   required

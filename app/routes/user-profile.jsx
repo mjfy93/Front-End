@@ -20,20 +20,71 @@ export default function UserProfile() {
       }
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/profile`, {
-          headers: {
-            'Authorization': `Bearer ${auth.user.token}`
-          }
+        const response = await fetch(`${API_BASE_URL}/api/my-library`, {
+          headers: { 'Authorization': `Bearer ${auth.user.token}` }
         });
 
-        if (!response.ok) {
-          throw new Error('Error al cargar el perfil');
-        }
+        if (!response.ok) throw new Error('Error al cargar el perfil');
 
         const data = await response.json();
-        setProfileData(data);
+
+        // Calculate top authors from read books
+        const authorCounts = {};
+        data.leido?.forEach(b => {
+          const authorName = `${b.book.autor.nombre_autor} ${b.book.autor.apellido_autor}`;
+          authorCounts[authorName] = (authorCounts[authorName] || 0) + 1;
+        });
+
+        const topAuthors = Object.entries(authorCounts)
+          .map(([name, count]) => ({ name, booksCount: count }))
+          .sort((a, b) => b.booksCount - a.booksCount)
+          .slice(0, 5);
+
+        // Transform to expected format
+        setProfileData({
+          user: {
+            firstName: auth.user.nombre_usuario,
+            name: `${auth.user.nombre_usuario} ${auth.user.apellido_usuario}`,
+            email: auth.user.username,
+            joinDate: 'N/A',
+            lastLogin: 'N/A'
+          },
+          statistics: {
+            totalBooksRead: data.leido?.length || 0,
+            totalBooksReading: data.leyendo?.length || 0,
+            totalBooksToRead: data.quiero_leer?.length || 0,
+            totalReviews: data.leido?.filter(b => b.resena).length || 0
+          },
+          readingLists: {
+            read: data.leido?.map(b => ({
+              id: b.book.id_libros,
+              title: b.book.titulo_libro,
+              author: `${b.book.autor.nombre_autor} ${b.book.autor.apellido_autor}`,
+              rating: b.calificacion
+            })) || [],
+            reading: data.leyendo?.map(b => ({
+              id: b.book.id_libros,
+              title: b.book.titulo_libro,
+              author: `${b.book.autor.nombre_autor} ${b.book.autor.apellido_autor}`
+            })) || [],
+            toRead: data.quiero_leer?.map(b => ({
+              id: b.book.id_libros,
+              title: b.book.titulo_libro,
+              author: `${b.book.autor.nombre_autor} ${b.book.autor.apellido_autor}`
+            })) || []
+          },
+          topAuthors: topAuthors,
+          recentReviews: data.leido?.filter(b => b.resena).slice(0, 5).map(b => ({
+            id: b.rating_id,
+            bookTitle: b.book.titulo_libro,
+            rating: b.calificacion,
+            comment: b.resena,
+            date: new Date(b.finished_at).toLocaleDateString('es'),
+            likes: 0
+          })) || []
+        });
       } catch (err) {
-        console.error('Error fetching profile:', err);
+        console.error('Error:', err);
         setError(err.message);
       } finally {
         setLoading(false);
