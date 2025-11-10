@@ -127,6 +127,8 @@ export default function BibliotecaUsuario() {
   .bibliotecaUsuarioContainer .nav-tabs .nav-link.active {
    
     color: #ffffff;
+    border-top:  #495057 solid 1px;
+    border-left:  #495057 solid 1px;
   }
 `;
 
