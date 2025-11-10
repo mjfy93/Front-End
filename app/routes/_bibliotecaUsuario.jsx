@@ -217,7 +217,7 @@ export default function BibliotecaUsuario() {
                 ))}
               </div>
             ) : (
-              <p>No tienes libros en tu biblioteca. ¡Agrega un libro! <Link to='/libros'>Explora nuestra biblioteca</Link></p>
+              <p>No tienes libros en tu biblioteca. ¡Agrega un libro! <Link to='/libros' className='text-warning'>Explora nuestra biblioteca</Link></p>
             )}
           </div>
 
