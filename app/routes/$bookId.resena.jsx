@@ -98,7 +98,15 @@ export default function Reseña() {
     }
 
     return (
+
         <div className="containerResena">
+            <button
+                className="btn btn-outline-warning btn-sm m-3"
+                onClick={() => navigate(-1)}
+            >
+                <i className="fas fa-arrow-left me-2"></i>
+                Volver
+            </button>
             <div className="libro">
                 <div className="card-body d-flex">
                     <img src={book.cover_url || "https://placehold.co/100"} alt={book.title} style={{ width: '100px', height: '150px', objectFit: 'contain' }} />

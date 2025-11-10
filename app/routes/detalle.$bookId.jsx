@@ -443,9 +443,7 @@ export default function DetalleLibro() {
                             Volver
                         </button>
                     </li>
-                    <li className="breadcrumb-item active text-light" aria-current="page">
-                        Detalle del Libro
-                    </li>
+                    
                 </ol>
             </nav>
 
